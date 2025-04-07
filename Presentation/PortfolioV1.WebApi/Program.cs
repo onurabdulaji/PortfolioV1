@@ -15,7 +15,9 @@ builder.Services.AddRepositoriesExtension();
 #region Application Layer Extensions
 builder.Services.AddAppMapsterExtension();
 builder.Services.AddMediatorExtension();
-builder.Services.AddServiceAndManagersExtensions();
+builder.Services.AddServicesExtension();
+builder.Services.AddManagementsExtension();
+builder.Services.AddFluentValidationExtension();
 #endregion
 
 builder.Services.AddControllers();
