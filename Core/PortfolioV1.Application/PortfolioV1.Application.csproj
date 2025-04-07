@@ -14,6 +14,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PortfolioV1.Domain\PortfolioV1.Domain.csproj" />
+    <ProjectReference Include="..\PortfolioV1.DTO\PortfolioV1.DTO.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IManagements\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 
 </Project>
