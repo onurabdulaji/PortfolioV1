@@ -1,6 +1,8 @@
-﻿using PortfolioV1.Domain.IRepositories.IGenerics;
+﻿using PortfolioV1.Domain.IRepositories.IAbstracts.IHeroRepositories;
+using PortfolioV1.Domain.IRepositories.IGenerics;
 using PortfolioV1.Domain.IRepositories.IUnitOfWorks;
 using PortfolioV1.Persistence.Context.Data;
+using PortfolioV1.Persistence.Repositories.Concretes.HeroRepositories;
 using PortfolioV1.Persistence.Repositories.Generics;
 
 namespace PortfolioV1.Persistence.Repositories.UnitOfWorks;
@@ -9,6 +11,10 @@ public class UnitOfWork : IUnitOfWork
 {
     protected readonly AppDbContext _context;
     private readonly Dictionary<Type, object> _repositories = new(); // singleton pattern uyguladik.
+
+    public IHeroReadRepository GetHeroReadRepository => GetOrCreateRepository<IHeroReadRepository, HeroReadRepository>();
+
+    public IHeroWriteRepository GetHeroWriteRepository => GetOrCreateRepository<IHeroWriteRepository, HeroWriteRepository>();
 
     public UnitOfWork(AppDbContext context)
     {
