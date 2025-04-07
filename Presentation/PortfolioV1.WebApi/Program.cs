@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDatabaseExtension(builder.Configuration);
 builder.Services.AddGenericPatternExtension();
 builder.Services.AddUnitOfWorkExtension();
+builder.Services.AddRepositoriesExtension();
 #endregion
 
 builder.Services.AddControllers();
