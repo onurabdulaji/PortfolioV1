@@ -1,6 +1,6 @@
-@PortfolioV1.WebApi_HostAddress = http://localhost:5197
+@PortfolioV1.WebApi_HostAddress = http://localhost:7044
 
-GET {{PortfolioV1.WebApi_HostAddress}}/weatherforecast/
+POST {{PortfolioV1.WebApi_HostAddress}}/api/Tests/CreateHero/
 Accept: application/json
 
 ###

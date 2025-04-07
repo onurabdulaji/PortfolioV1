@@ -6,4 +6,8 @@ namespace PortfolioV1.Application.Features.MediatR.Hero.CreateHero.Commands;
 public class CreateHeroCommand : IRequest
 {
     public CreateHeroDto CreateHeroDto { get; set; }
+    public CreateHeroCommand(CreateHeroDto createHeroDto)
+    {
+        CreateHeroDto = createHeroDto;
+    }
 }

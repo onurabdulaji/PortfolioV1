@@ -12,8 +12,8 @@ using PortfolioV1.Persistence.Context.Data;
 namespace PortfolioV1.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250407123035_InitialDbNano")]
-    partial class InitialDbNano
+    [Migration("20250407202506_InitialDbNanoFix")]
+    partial class InitialDbNanoFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

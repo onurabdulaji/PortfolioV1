@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PortfolioV1.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDbNano : Migration
+    public partial class InitialDbNanoFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
