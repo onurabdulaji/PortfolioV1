@@ -1,12 +1,12 @@
-﻿namespace PortfolioV1.Domain.Entities.IBase;
+﻿namespace PortfolioV1.Domain.Entities;
 
 public class Hero : BaseEntity
 {
     public string? Title { get; set; }
     public string? SubTitle { get; set; }
     public string? BackgroundImageUrl { get; set; }
-    public Hero() { }
-    public Hero(string? title, string? subTitle, string? backgroundImageUrl)
+    public Hero() : base() { }
+    public Hero(string? title, string? subTitle, string? backgroundImageUrl) : base()
     {
         Title = title;
         SubTitle = subTitle;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PortfolioV1.Domain.Entities.IBase;
+using PortfolioV1.Domain.Entities;
 
 namespace PortfolioV1.Persistence.Context.Data;
 
