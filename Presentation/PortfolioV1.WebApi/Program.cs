@@ -3,8 +3,10 @@ using PortfolioV1.Persistence.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 #region Persistence Layer Extensions
 builder.Services.AddDatabaseExtension(builder.Configuration);
+builder.Services.AddGenericPatternExtension();
 #endregion
 
 builder.Services.AddControllers();
