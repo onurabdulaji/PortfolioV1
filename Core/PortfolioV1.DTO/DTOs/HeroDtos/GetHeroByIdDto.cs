@@ -3,7 +3,7 @@ using PortfolioV1.DTO.Configuration;
 
 namespace PortfolioV1.DTO.DTOs.HeroDtos;
 
-public class HeroDto : BaseDTO<HeroDto, Hero>
+public class GetHeroByIdDto : BaseDTO<GetHeroByIdDto , Hero>
 {
     public string? Id { get; set; }
     public string? Title { get; set; }

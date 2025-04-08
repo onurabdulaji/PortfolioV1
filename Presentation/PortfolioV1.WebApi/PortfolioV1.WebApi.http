@@ -2,5 +2,9 @@
 
 POST {{PortfolioV1.WebApi_HostAddress}}/api/Tests/CreateHero/
 Accept: application/json
+###
+
+GET {{PortfolioV1.WebApi_HostAddress}}/api/Tests/GetAllHero/
+Accept: application/json
 
 ###

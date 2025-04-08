@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioV1.Application.Features.MediatR.Hero.CreateHero.Commands;
+using PortfolioV1.Application.Features.MediatR.Hero.GetAllHero.Queries;
 using PortfolioV1.DTO.DTOs.HeroDtos;
 
 namespace PortfolioV1.WebApi.Controllers;
@@ -22,5 +23,12 @@ public class TestsController : ControllerBase
         var command = new CreateHeroCommand(createHeroDto);
         await _mediator.Send(command);
         return Ok(new { message = "Hero Created Successfuly" });
+    }
+
+    [HttpGet("GetAllHero")]
+    public async Task<IActionResult> GetAllHeros()
+    {
+        var result = await _mediator.Send(new GetAllHeroQuery());
+        return Ok(result);
     }
 }
