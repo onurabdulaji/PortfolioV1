@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using MediatR;
+using PortfolioV1.Application.Commons.IFactories.Dto;
 using PortfolioV1.Application.HelperServices.CustomErrorService;
 using PortfolioV1.Application.IManagements.HeroManagementsServices;
 using PortfolioV1.Application.Validations;
@@ -13,12 +13,14 @@ public class HeroService : IHeroService
     private readonly IHeroManagementService _heroManagementService;
     private readonly IValidatorService _validatorService;
     private readonly IErrorHandlingService _errorHandlingService;
+    private readonly IDtoFactory _dtoFactory;
 
-    public HeroService(IHeroManagementService heroManagementService, IValidatorService validatorService, IErrorHandlingService errorHandlingService)
+    public HeroService(IHeroManagementService heroManagementService, IValidatorService validatorService, IErrorHandlingService errorHandlingService, IDtoFactory dtoFactory)
     {
         _heroManagementService = heroManagementService;
         _validatorService = validatorService;
         _errorHandlingService = errorHandlingService;
+        _dtoFactory = dtoFactory;
     }
 
     // Write
@@ -27,9 +29,9 @@ public class HeroService : IHeroService
     {
         await _validatorService.ValidateAsync(createHeroDto);
 
-        var hero = createHeroDto.Adapt<Hero>();
+        var newHero = _dtoFactory.CreateHeroFromDto(createHeroDto);
 
-        await _heroManagementService.CreateHeroAsync(hero);
+        await _heroManagementService.CreateHeroAsync(newHero);
     }
 
     public async Task<UpdateHeroDto> UpdateHeroAsync(UpdateHeroDto updateHeroDto, CancellationToken cancellationToken = default)
