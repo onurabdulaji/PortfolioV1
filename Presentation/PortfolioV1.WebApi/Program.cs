@@ -18,6 +18,7 @@ builder.Services.AddMediatorExtension();
 builder.Services.AddServicesExtension();
 builder.Services.AddManagementsExtension();
 builder.Services.AddFluentValidationExtension();
+builder.Services.AddErrorHandlingServiceExtensions();
 #endregion
 
 builder.Services.AddControllers();

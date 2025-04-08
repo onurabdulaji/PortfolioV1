@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PortfolioV1.Application.Features.MediatR.Hero.CreateHero.Commands;
 using PortfolioV1.Application.Features.MediatR.Hero.GetAllHero.Queries;
+using PortfolioV1.Application.Features.MediatR.Hero.GetHeroById.Queries;
+using PortfolioV1.Application.Features.MediatR.Hero.UpdateHero.Commands;
 using PortfolioV1.DTO.DTOs.HeroDtos;
 
 namespace PortfolioV1.WebApi.Controllers;
@@ -17,6 +19,20 @@ public class TestsController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet("GetAllHero")]
+    public async Task<IActionResult> GetAllHeros()
+    {
+        var result = await _mediator.Send(new GetAllHeroQuery());
+        return Ok(result);
+    }
+    //[HttpGet("{id}", Name = "GetHeroById")]
+    [HttpGet("GetHeroById/{id}")]
+    public async Task<ActionResult<GetHeroByIdDto>> GetHeroById(string id)
+    {
+        var result = await _mediator.Send(new GetHeroByIdQuery(id));
+        return Ok(result);
+    }
+
     [HttpPost("CreateHero")]
     public async Task<IActionResult> CreateHero([FromBody] CreateHeroDto createHeroDto)
     {
@@ -24,11 +40,12 @@ public class TestsController : ControllerBase
         await _mediator.Send(command);
         return Ok(new { message = "Hero Created Successfuly" });
     }
-
-    [HttpGet("GetAllHero")]
-    public async Task<IActionResult> GetAllHeros()
+    [HttpPut("UpdateHero")]
+    public async Task<IActionResult> UpdateHero([FromBody] UpdateHeroDto updateHeroDto)
     {
-        var result = await _mediator.Send(new GetAllHeroQuery());
+        var command = new UpdateHeroCommand(updateHeroDto);
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
+
 }
