@@ -7,7 +7,8 @@ public interface IHeroManagementService
     // Write
     Task CreateHeroAsync(Hero createHero);
     Task UpdateHeroAsync(Hero updateHero);
-    //Task DeleteHeroAsync(string id);
+    Task DeleteHeroAsync(string id);
+    Task DeleteHeroRangeAsync(IList<string> heroesIds);
 
     // Read
     Task<IList<Hero>> GetAllAsync(CancellationToken cancellationToken = default);

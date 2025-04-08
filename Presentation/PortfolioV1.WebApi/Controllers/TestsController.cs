@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioV1.Application.Features.MediatR.Hero.CreateHero.Commands;
+using PortfolioV1.Application.Features.MediatR.Hero.DeleteHero.Commands;
+using PortfolioV1.Application.Features.MediatR.Hero.DeleteMultipleHero.Commands;
 using PortfolioV1.Application.Features.MediatR.Hero.GetAllHero.Queries;
 using PortfolioV1.Application.Features.MediatR.Hero.GetHeroById.Queries;
 using PortfolioV1.Application.Features.MediatR.Hero.UpdateHero.Commands;
@@ -44,6 +46,22 @@ public class TestsController : ControllerBase
     public async Task<IActionResult> UpdateHero([FromBody] UpdateHeroDto updateHeroDto)
     {
         var command = new UpdateHeroCommand(updateHeroDto);
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpDelete("DeleteHero/{id}")]
+    public async Task<IActionResult> DeleteHero(string id)
+    {
+        var command = new DeleteHeroCommand { Id = id };
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpDelete("DeleteHeroRange")]
+    public async Task<IActionResult> DeleteRange([FromBody] DeleteHeroesRangeResponseDto responseDto)
+    {
+        var command = new DeleteMultipleHeroCommand { Ids = responseDto.DeletedIds };
         var result = await _mediator.Send(command);
         return Ok(result);
     }

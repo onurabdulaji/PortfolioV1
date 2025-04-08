@@ -25,6 +25,16 @@ public class HeroManagementService : IHeroManagementService
         await _unitOfWork.GetHeroWriteRepository.UpdateHero(updateHero);
         await _unitOfWork.SaveAsync();
     }
+    public async Task DeleteHeroAsync(string id)
+    {
+        await _unitOfWork.GetHeroWriteRepository.DeleteHero(id);
+        await _unitOfWork.SaveAsync();
+    }
+    public async Task DeleteHeroRangeAsync(IList<string> heroesIds)
+    {
+        await _unitOfWork.GetHeroWriteRepository.DeleteHeroRange(heroesIds);
+        await _unitOfWork.SaveAsync();
+    }
 
     // Read
 
@@ -37,5 +47,6 @@ public class HeroManagementService : IHeroManagementService
     {
         return await _unitOfWork.GetHeroReadRepository.GetHeroByIdAsync(id, cancellationToken: cancellationToken);
     }
-   
+
+    
 }

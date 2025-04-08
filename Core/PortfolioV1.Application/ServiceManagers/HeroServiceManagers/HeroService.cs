@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using MediatR;
 using PortfolioV1.Application.HelperServices.CustomErrorService;
 using PortfolioV1.Application.IManagements.HeroManagementsServices;
 using PortfolioV1.Application.Validations;
@@ -46,6 +47,37 @@ public class HeroService : IHeroService
         return existingHero.Adapt<UpdateHeroDto>();
     }
 
+    public async Task<bool> DeleteHeroAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var existingHero = await _heroManagementService.GetByIdAsync(id, cancellationToken);
+
+        await _errorHandlingService.ThrowIfNullAsync(existingHero, " Please Check ID ");
+
+        await _heroManagementService.DeleteHeroAsync(id);
+
+        return true;
+
+    }
+    public async Task<DeleteHeroesRangeResponseDto> DeleteHeroRangeAsync(IList<string> ids, string message, CancellationToken cancellationToken = default)
+    {
+        if (ids == null || !ids.Any())
+            await _errorHandlingService.ThrowIfNullAsync(ids, "ID listesi boş veya geçersiz.");
+
+        var heroIds = ids.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList();
+
+        if (!heroIds.Any())
+            await _errorHandlingService.ThrowIfNullAsync(heroIds, "Geçerli ID'ler bulunamadı.");
+
+        await _heroManagementService.DeleteHeroRangeAsync(heroIds);
+
+        return new DeleteHeroesRangeResponseDto
+        {
+            DeletedIds = heroIds,
+            Message = message ?? "Seçilen kahramanlar başarıyla silindi."
+        };
+
+    }
+
     // Read
 
     public async Task<IList<HeroDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -63,6 +95,4 @@ public class HeroService : IHeroService
 
         return heroId?.Adapt<GetHeroByIdDto>();
     }
-
-
 }
