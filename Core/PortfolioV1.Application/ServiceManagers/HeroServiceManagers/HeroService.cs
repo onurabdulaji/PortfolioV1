@@ -32,7 +32,7 @@ public class HeroService : IHeroService
     {
         var hero = await _heroManagementService.GetByIdAsync(id, cancellationToken);
 
-        if (hero.Id is null)
+        if (hero is null)
             throw new ArgumentNullException(nameof(hero));
 
         await _heroManagementService.DeleteHeroAsync(id);
@@ -44,7 +44,7 @@ public class HeroService : IHeroService
     {
         var heroes = await _heroManagementService.TGetByIdsAsync(requestDto.Ids, cancellationToken);
 
-        if (heroes.Count == 0)
+        if (!heroes.Any())
             throw new ArgumentNullException(nameof(heroes), "No heroes found with the provided IDs.");
 
         var deletedIds = new List<string>();
@@ -60,14 +60,18 @@ public class HeroService : IHeroService
         return responseDto;
     }
 
-    public Task<IList<HeroDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IList<HeroDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var list = await _heroManagementService.GetAllAsync(cancellationToken);
+
+        return list.Select(hero => _heroDtoFactory.CreateDto(hero)).ToList();
     }
 
-    public Task<GetHeroByIdDto?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<GetHeroByIdDto?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var hero = await _heroManagementService.GetByIdAsync(id, cancellationToken);
+
+        return _heroDtoFactory.CreateGetDto(hero);
     }
 
     public async Task<UpdateHeroDto> UpdateHeroAsync(UpdateHeroDto updateHeroDto, CancellationToken cancellationToken = default)
