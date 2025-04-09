@@ -48,5 +48,14 @@ public class HeroManagementService : IHeroManagementService
         return await _unitOfWork.GetHeroReadRepository.GetHeroByIdAsync(id, cancellationToken: cancellationToken);
     }
 
-    
+    public async Task<IList<Hero>> TGetByIdsAsync(IList<string> ids, CancellationToken cancellationToken = default)
+    {
+        return await _unitOfWork.GetHeroReadRepository.GetByIdsAsync(ids, cancellationToken: cancellationToken);
+    }
+
+    public async Task TDeleteRangeAsync(IList<Hero> heroes, CancellationToken cancellationToken = default)
+    {
+        await _unitOfWork.GetHeroWriteRepository.DeleteRangeAsync(heroes, cancellationToken: cancellationToken);
+        await _unitOfWork.SaveAsync();
+    }
 }

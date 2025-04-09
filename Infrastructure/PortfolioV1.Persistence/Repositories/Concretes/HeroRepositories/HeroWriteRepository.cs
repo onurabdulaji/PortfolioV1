@@ -61,5 +61,10 @@ public class HeroWriteRepository : GenericWriteRepository<Hero>, IHeroWriteRepos
         _context.Heroes.Update(hero);
         await _context.SaveChangesAsync();
     }
-    
+
+    public Task DeleteRangeAsync(IList<Hero> heroes, CancellationToken cancellationToken = default)
+    {
+        _context.Heroes.RemoveRange(heroes);
+        return _context.SaveChangesAsync(cancellationToken);
+    }
 }

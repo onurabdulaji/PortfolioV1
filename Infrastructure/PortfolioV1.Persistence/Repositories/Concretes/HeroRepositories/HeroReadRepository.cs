@@ -22,6 +22,11 @@ public class HeroReadRepository : GenericReadRepository<Hero>, IHeroReadReposito
 
     }
 
+    public async Task<IList<Hero>> GetByIdsAsync(IList<string> ids, CancellationToken cancellationToken = default)
+    {
+        return await _context.Heroes.Where(herp => ids.Contains(herp.Id)).ToListAsync(cancellationToken);
+    }
+
     public async Task<Hero> GetHeroByIdAsync(string id, bool trackingChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<Hero> query = Table;

@@ -13,4 +13,12 @@ public interface IHeroManagementService
     // Read
     Task<IList<Hero>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<Hero?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+
+
+    /// 
+
+    Task<IList<Hero>> TGetByIdsAsync(IList<string> ids, CancellationToken cancellationToken = default);
+    Task TDeleteRangeAsync(IList<Hero> heroes, CancellationToken cancellationToken = default);
+
+
 }

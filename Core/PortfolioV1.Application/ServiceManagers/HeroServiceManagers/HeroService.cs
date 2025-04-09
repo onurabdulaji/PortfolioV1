@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using PortfolioV1.Application.Commons.IFactories.Dto;
+using PortfolioV1.Application.GenericService;
 using PortfolioV1.Application.HelperServices.CustomErrorService;
 using PortfolioV1.Application.IManagements.HeroManagementsServices;
 using PortfolioV1.Application.Validations;
@@ -8,93 +9,82 @@ using PortfolioV1.DTO.DTOs.HeroDtos;
 
 namespace PortfolioV1.Application.ServiceManagers.HeroServiceManagers;
 
-public class HeroService : IHeroService
+public class HeroService : IGenericService<HeroDto, Hero>
 {
+    private readonly IGenericDtoFactory<HeroDto, Hero> _dtoFactory;
     private readonly IHeroManagementService _heroManagementService;
     private readonly IValidatorService _validatorService;
     private readonly IErrorHandlingService _errorHandlingService;
-    private readonly IDtoFactory _dtoFactory;
 
-    public HeroService(IHeroManagementService heroManagementService, IValidatorService validatorService, IErrorHandlingService errorHandlingService, IDtoFactory dtoFactory)
+    public HeroService(
+        IGenericDtoFactory<HeroDto, Hero> dtoFactory,
+        IHeroManagementService heroManagementService,
+        IValidatorService validatorService,
+        IErrorHandlingService errorHandlingService)
     {
+        _dtoFactory = dtoFactory;
         _heroManagementService = heroManagementService;
         _validatorService = validatorService;
         _errorHandlingService = errorHandlingService;
-        _dtoFactory = dtoFactory;
     }
 
-    // Write
-
-    public async Task CreateHeroAsync(CreateHeroDto createHeroDto, CancellationToken cancellationToken = default)
+    public async Task<HeroDto> CreateAsync(HeroDto dto, CancellationToken cancellationToken = default)
     {
-        await _validatorService.ValidateAsync(createHeroDto);
+        await _validatorService.ValidateAsync(dto);
 
-        var newHero = _dtoFactory.CreateHeroFromDto(createHeroDto);
+        var entity = _dtoFactory.CreateEntity(dto);
 
-        await _heroManagementService.CreateHeroAsync(newHero);
+        await _heroManagementService.CreateHeroAsync(entity);
+
+        return _dtoFactory.CreateDto(entity);
     }
 
-    public async Task<UpdateHeroDto> UpdateHeroAsync(UpdateHeroDto updateHeroDto, CancellationToken cancellationToken = default)
+    public async Task<HeroDto> UpdateAsync(HeroDto dto, CancellationToken cancellationToken = default)
     {
-        await _validatorService.ValidateAsync(updateHeroDto);
+        await _validatorService.ValidateAsync(dto);
+        
+        var existingHero = await _heroManagementService.GetByIdAsync(dto.Id, cancellationToken);
+        await _errorHandlingService.ThrowIfNullAsync(existingHero, nameof(existingHero));
 
-        var existingHero = await _heroManagementService.GetByIdAsync(updateHeroDto.Id, cancellationToken);
-
-        await _errorHandlingService.ThrowIfNullAsync(existingHero, "Hero not found");
-
-        updateHeroDto.Adapt(existingHero);
+        dto.Adapt(existingHero);
 
         await _heroManagementService.UpdateHeroAsync(existingHero);
 
-        return existingHero.Adapt<UpdateHeroDto>();
+        return _dtoFactory.CreateDto(existingHero);
     }
 
-    public async Task<bool> DeleteHeroAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
     {
         var existingHero = await _heroManagementService.GetByIdAsync(id, cancellationToken);
-
-        await _errorHandlingService.ThrowIfNullAsync(existingHero, " Please Check ID ");
+        await _errorHandlingService.ThrowIfNullAsync(existingHero, nameof(existingHero));
 
         await _heroManagementService.DeleteHeroAsync(id);
 
         return true;
-
     }
-    public async Task<DeleteHeroesRangeResponseDto> DeleteHeroRangeAsync(IList<string> ids, string message, CancellationToken cancellationToken = default)
-    {
-        if (ids == null || !ids.Any())
-            await _errorHandlingService.ThrowIfNullAsync(ids, "ID listesi boş veya geçersiz.");
-
-        var heroIds = ids.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList();
-
-        if (!heroIds.Any())
-            await _errorHandlingService.ThrowIfNullAsync(heroIds, "Geçerli ID'ler bulunamadı.");
-
-        await _heroManagementService.DeleteHeroRangeAsync(heroIds);
-
-        return new DeleteHeroesRangeResponseDto
-        {
-            DeletedIds = heroIds,
-            Message = message ?? "Seçilen kahramanlar başarıyla silindi."
-        };
-
-    }
-
-    // Read
 
     public async Task<IList<HeroDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var list = await _heroManagementService.GetAllAsync(cancellationToken);
-
-        return list.Adapt<IList<HeroDto>>();
+        var heroes = await _heroManagementService.GetAllAsync(cancellationToken);
+        return heroes.Adapt<IList<HeroDto>>();
     }
 
-    public async Task<GetHeroByIdDto?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<HeroDto> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var heroId = await _heroManagementService.GetByIdAsync(id, cancellationToken);
+        var hero = await _heroManagementService.GetByIdAsync(id, cancellationToken);
+        await _errorHandlingService.ThrowIfNullAsync(hero, nameof(hero));
 
-        await _errorHandlingService.ThrowIfNullAsync(heroId, "Hero not found");
+        return _dtoFactory.CreateDto(hero);
+    }
 
-        return heroId?.Adapt<GetHeroByIdDto>();
+    public async Task<bool> DeleteRangeAsync(IList<string> ids, CancellationToken cancellationToken = default)
+    {
+        var heroesToDelete = await _heroManagementService.TGetByIdsAsync(ids, cancellationToken);
+
+        await _errorHandlingService.ThrowIfNullAsync(heroesToDelete, nameof(heroesToDelete));
+
+        await _heroManagementService.TDeleteRangeAsync(heroesToDelete, cancellationToken);
+
+        return true;
     }
 }

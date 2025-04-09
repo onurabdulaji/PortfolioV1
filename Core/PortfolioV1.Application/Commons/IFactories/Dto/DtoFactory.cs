@@ -1,33 +1,43 @@
 ﻿using Mapster;
-using PortfolioV1.Domain.Entities;
-using PortfolioV1.DTO.DTOs.HeroDtos;
 
 namespace PortfolioV1.Application.Commons.IFactories.Dto;
 
 public class DtoFactory : IDtoFactory
 {
-    public DeleteHeroesRangeRequestDto CreateDeleteHeroesRangeRequestDto(IList<string> ids, string message)
+    // Entity'den DTO'ya dönüşüm
+    public TDto CreateDtoFromEntity<TEntity, TDto>(TEntity entity)
     {
-        return new DeleteHeroesRangeRequestDto
-        {
-            Ids = ids,
-            Message = message
-        };
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+
+        return entity.Adapt<TDto>();
     }
 
-    public Hero CreateHeroFromDto(CreateHeroDto createHeroDto)
+    // DTO'dan Entity'ye dönüşüm
+    public TEntity CreateEntityFromDto<TEntity, TDto>(TDto dto)
     {
-        if (createHeroDto is null) throw new CheckNullExceptionGloballay("createHeroDto is null");
+        if (dto == null)
+            throw new ArgumentNullException(nameof(dto), "DTO cannot be null");
 
-        return createHeroDto.Adapt<Hero>();
+        return dto.Adapt<TEntity>();
     }
 
-    public class CheckNullExceptionGloballay : Exception
-    {
-        public CheckNullExceptionGloballay(string message) : base(message)
-        {
-        }
-    }
+    //public Hero CreateHeroFromDto(CreateHeroDto createHeroDto)
+    //{
+    //    if (createHeroDto is null)
+    //        throw new DtoNullException(nameof(createHeroDto), "This object is null please check it !");
+
+    //    return createHeroDto.Adapt<Hero>();
+    //}
+
+    //public DeleteHeroesRangeRequestDto CreateDeleteHeroesRangeRequestDto(IList<string> ids, string message)
+    //{
+    //    return new DeleteHeroesRangeRequestDto
+    //    {
+    //        Ids = ids,
+    //        Message = message
+    //    };
+    //}
+
 }
-
 

@@ -10,4 +10,6 @@ public interface IHeroWriteRepository : IGenericWriteRepository<Hero>
     Task DeleteHero(string id);
     Task DeleteHeroRange(IList<string> ids);
     Task ChangeStatus(string id);
+    Task DeleteRangeAsync(IList<Hero> heroes, CancellationToken cancellationToken = default);
+
 }

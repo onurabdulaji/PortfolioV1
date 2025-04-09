@@ -7,4 +7,6 @@ public interface IHeroReadRepository : IGenericReadRepository<Hero>
 {
     Task<IList<Hero>> GetAllHeroListAsync(bool trackingChanges = false , CancellationToken cancellationToken = default);
     Task<Hero> GetHeroByIdAsync(string id, bool trackingChanges = false, CancellationToken cancellationToken = default);
+    Task<IList<Hero>> GetByIdsAsync(IList<string> ids, CancellationToken cancellationToken = default);
+
 }
