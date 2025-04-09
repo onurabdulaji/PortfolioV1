@@ -5,6 +5,6 @@ namespace PortfolioV1.DTO.DTOs.HeroDtos;
 
 public class DeleteHeroesRangeResponseDto : BaseDTO<DeleteHeroesRangeResponseDto,Hero>
 {
-    public IList<string> DeletedIds { get; set; } = new List<string>();
-    public string Message { get; set; } = string.Empty;
+    public IList<string> DeletedIds { get; set; } 
+    public string Message { get; set; }
 }

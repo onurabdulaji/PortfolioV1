@@ -10,4 +10,8 @@ public interface IHeroDtoFactory
     HeroDto CreateDto(Hero entity);
     UpdateHeroDto CreateUpdateDto(Hero entity);
     GetHeroByIdDto CreateGetDto(Hero entity);
+
+    DeleteHeroesRangeRequestDto CreateDeleteHeroesRangeRequestDto(IList<string> ids, string message);
+
+    DeleteHeroesRangeResponseDto GetDeleteHeroesRangeResponseDto(IList<string> ids, string message);
 }

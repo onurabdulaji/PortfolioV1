@@ -5,6 +5,23 @@ namespace PortfolioV1.Application.Commons.IFactories.HeroDtoTestting;
 
 public class HeroDtoFactory : IHeroDtoFactory
 {
+    public DeleteHeroesRangeRequestDto CreateDeleteHeroesRangeRequestDto(IList<string> ids, string message)
+    {
+        return new DeleteHeroesRangeRequestDto
+        {
+            Ids = ids,
+            Message = message
+        };
+    }
+
+    public DeleteHeroesRangeResponseDto GetDeleteHeroesRangeResponseDto(IList<string> ids, string message)
+    {
+        return new DeleteHeroesRangeResponseDto
+        {
+            DeletedIds = ids,
+            Message = message
+        };
+    }
 
     public HeroDto CreateDto(Hero entity)
     {
@@ -82,4 +99,6 @@ public class HeroDtoFactory : IHeroDtoFactory
         };
 
     }
+
+    
 }

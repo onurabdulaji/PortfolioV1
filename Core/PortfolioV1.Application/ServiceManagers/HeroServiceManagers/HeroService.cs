@@ -40,9 +40,24 @@ public class HeroService : IHeroService
         return true;
     }
 
-    public Task<DeleteHeroesRangeResponseDto> DeleteHeroRangeAsync(IList<string> ids, string message, CancellationToken cancellationToken = default)
+    public async Task<DeleteHeroesRangeResponseDto> DeleteHeroRangeAsync(DeleteHeroesRangeRequestDto requestDto, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var heroes = await _heroManagementService.TGetByIdsAsync(requestDto.Ids, cancellationToken);
+
+        if (heroes.Count == 0)
+            throw new ArgumentNullException(nameof(heroes), "No heroes found with the provided IDs.");
+
+        var deletedIds = new List<string>();
+
+        foreach (var hero in heroes)
+        {
+            await _heroManagementService.DeleteHeroAsync(hero.Id);
+            deletedIds.Add(hero.Id);
+        }
+
+        var responseDto = _heroDtoFactory.GetDeleteHeroesRangeResponseDto(deletedIds, requestDto.Message);
+
+        return responseDto;
     }
 
     public Task<IList<HeroDto>> GetAllAsync(CancellationToken cancellationToken = default)
